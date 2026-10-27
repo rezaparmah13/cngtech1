@@ -1,0 +1,16 @@
+{
+  "name": "cng-center-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Persian RTL, dependency-free static website for a CNG service center",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:production": "node scripts/build.mjs --production",
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "license": "UNLICENSED"
+}

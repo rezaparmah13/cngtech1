@@ -1,0 +1,293 @@
+{
+  "browser": "Chromium headless",
+  "viewports": [
+    {
+      "width": 360,
+      "route": "/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/404.html",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/articles/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/articles/before-conversion/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/articles/cng-benefits/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/articles/cng-maintenance/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/articles/cng-vs-lpg/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/articles/fuel-costs/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/articles/what-is-cng/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/calculator/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/contact/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/free-conversion/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/privacy/",
+      "pass": true
+    },
+    {
+      "width": 360,
+      "route": "/services/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/404.html",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/articles/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/articles/before-conversion/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/articles/cng-benefits/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/articles/cng-maintenance/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/articles/cng-vs-lpg/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/articles/fuel-costs/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/articles/what-is-cng/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/calculator/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/contact/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/free-conversion/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/privacy/",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "route": "/services/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/404.html",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/articles/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/articles/before-conversion/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/articles/cng-benefits/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/articles/cng-maintenance/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/articles/cng-vs-lpg/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/articles/fuel-costs/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/articles/what-is-cng/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/calculator/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/contact/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/free-conversion/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/privacy/",
+      "pass": true
+    },
+    {
+      "width": 768,
+      "route": "/services/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/404.html",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/articles/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/articles/before-conversion/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/articles/cng-benefits/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/articles/cng-maintenance/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/articles/cng-vs-lpg/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/articles/fuel-costs/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/articles/what-is-cng/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/calculator/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/contact/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/free-conversion/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/privacy/",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "route": "/services/",
+      "pass": true
+    }
+  ],
+  "interactions": [
+    "mobile menu open/Escape close; FAQ disclosure",
+    "calculator: Persian digits, decimal, known result 217000, range errors, negative savings",
+    "eligibility: boundary years and public vehicle flow",
+    "article search: no results, clear, category filter",
+    "JavaScript disabled: navigation remains visible"
+  ],
+  "runtimeExceptions": 0
+}

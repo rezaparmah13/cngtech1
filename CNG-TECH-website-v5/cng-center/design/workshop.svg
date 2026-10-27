@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900"><rect width="1200" height="900" fill="#123d33"/><svg x="0" y="-33" xmlns="http://www.w3.org/2000/svg" width="1200" height="967" viewBox="0 0 720 580" fill="none">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="720" y2="580" gradientUnits="userSpaceOnUse"><stop stop-color="#173f37"/><stop offset="1" stop-color="#092923"/></linearGradient>
+ <linearGradient id="body" x1="170" y1="260" x2="530" y2="420" gradientUnits="userSpaceOnUse"><stop stop-color="#f5f6e9"/><stop offset="1" stop-color="#a7c2b5"/></linearGradient>
+ <linearGradient id="glass" x1="290" y1="242" x2="460" y2="315" gradientUnits="userSpaceOnUse"><stop stop-color="#4d7d72"/><stop offset="1" stop-color="#153b34"/></linearGradient>
+ <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="#d3eee0" stroke-opacity=".07"/></pattern>
+ <filter id="shadow"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<rect width="720" height="580" rx="32" fill="url(#bg)"/>
+<rect width="720" height="580" rx="32" fill="url(#grid)"/>
+<circle cx="360" cy="290" r="200" stroke="#bce4be" stroke-opacity=".12"/>
+<circle cx="360" cy="290" r="160" stroke="#bce4be" stroke-opacity=".08"/>
+<path d="M46 450C143 488 213 416 300 455S508 514 676 427" stroke="#bce4be" stroke-opacity=".24" stroke-dasharray="7 8"/>
+<circle cx="91" cy="121" r="5" fill="#d6efaa"/>
+<path d="M105 121H195" stroke="#7ca899" stroke-width="2"/>
+<text x="48" y="82" font-family="Arial,sans-serif" font-size="14" letter-spacing="4" fill="#a8c4b6">A SMARTER WAY TO GO</text>
+<text x="48" y="533" font-family="Arial,sans-serif" font-size="12" letter-spacing="3" fill="#739f8f">COMPRESSED NATURAL GAS</text>
+<g transform="translate(508 69)"><rect width="158" height="80" rx="18" fill="#d9efb4"/><path d="M26 49c-9-20 8-27 25-28-1 18-9 33-25 28Z" fill="#245744"/><path d="m25 54 17-23" stroke="#d9efb4" stroke-width="2"/><text x="65" y="49" fill="#173f37" font-family="Arial,sans-serif" font-size="26" font-weight="bold">CNG</text></g>
+<ellipse cx="340" cy="425" rx="223" ry="29" fill="#000" opacity=".3" filter="url(#shadow)"/>
+<!-- Original conceptual car illustration, not an installation diagram. -->
+<path d="m137 347 60-34 76-85c12-13 29-19 50-19h115c23 0 43 11 58 29l52 68 54 24c15 7 24 19 24 35v28c0 17-15 30-33 30H149c-24 0-39-13-39-31v-15c0-15 10-25 27-30Z" fill="url(#body)"/>
+<path d="m220 311 69-75c8-9 18-12 32-12h106c15 0 28 8 39 21l48 64Z" fill="url(#glass)"/>
+<path d="m340 224-9 87m104-85 37 85" stroke="#c9dacf" stroke-width="9"/>
+<path d="m230 306 48-52" stroke="#a9c4b6" stroke-opacity=".4" stroke-width="3"/>
+<path d="M336 329v61m140-60v57" stroke="#819e91" stroke-width="2"/>
+<path d="M345 336h19m123 0h17" stroke="#3c6357" stroke-width="5" stroke-linecap="round"/>
+<path d="M137 369h447" stroke="#f9fcf2" stroke-opacity=".6" stroke-width="2"/>
+<path d="m120 363 54-14-4 24-50 7Z" fill="#fffbe0"/>
+<path d="m585 339 27 13v18l-27-6Z" fill="#d69567"/>
+<path d="M128 403h479" stroke="#466c5c" stroke-width="10" stroke-linecap="round"/>
+<circle cx="220" cy="404" r="45" fill="#10251f"/><circle cx="220" cy="404" r="27" fill="#75978a"/><circle cx="220" cy="404" r="18" fill="#b6cbc1"/><circle cx="220" cy="404" r="8" fill="#426658"/>
+<circle cx="510" cy="404" r="45" fill="#10251f"/><circle cx="510" cy="404" r="27" fill="#75978a"/><circle cx="510" cy="404" r="18" fill="#b6cbc1"/><circle cx="510" cy="404" r="8" fill="#426658"/>
+<path d="m289 316-8-19h-22c-8 0-10 15-1 19Z" fill="#dbe5d8"/>
+<g transform="translate(54 191)"><rect width="139" height="66" rx="16" fill="#214c40" stroke="#54796a"/><circle cx="32" cy="33" r="17" fill="#cfe9ac"/><path d="m24 33 6 6 11-12" stroke="#214c40" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M62 26h52M62 39h35" stroke="#a6c1ae" stroke-width="5" stroke-linecap="round"/></g>
+<g transform="translate(575 453)"><circle cx="28" cy="28" r="28" fill="#db946a"/><path d="m19 36 18-18m-18 0h18v18" stroke="#153c32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>
+</svg>
