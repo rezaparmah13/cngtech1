@@ -35,20 +35,37 @@ if (calculator) {
 const eligibility = document.querySelector('#eligibility-form');
 if (eligibility) {
   eligibility.hidden = false;
-  const type = eligibility.querySelector('[name=type]');
-  const year = eligibility.querySelector('[name=year]');
   const result = document.querySelector('#eligibility-result');
-  const sync = () => { year.required = type.value === 'private'; year.disabled = type.value !== 'private'; year.closest('.field').hidden = year.disabled; result.hidden = true; };
-  type.addEventListener('change', sync);
-  year.addEventListener('input', () => { result.hidden = true; });
-  sync();
+  const request = document.querySelector('#eligibility-request');
+  const clear = () => { result.hidden = true; request.hidden = true; };
+  eligibility.addEventListener('input', clear);
+  eligibility.addEventListener('change', clear);
   eligibility.addEventListener('submit', event => {
     event.preventDefault();
     const maxYear = Number(new Intl.DateTimeFormat('en-u-ca-persian', { year: 'numeric' }).format(new Date())) + 1;
-    const response = eligibilityMessage(type.value, parseNumber(year.value), Number(eligibility.dataset.minimum), maxYear);
-    result.textContent = response.text;
+    const answers = Object.fromEntries(new FormData(eligibility));
+    answers.year = parseNumber(answers.year);
+    const response = eligibilityMessage(answers, {
+      minimum: Number(eligibility.dataset.minimum),
+      pickupMinimum: Number(eligibility.dataset.pickupMinimum),
+      maxYear
+    });
+    const message = document.createElement('p');
+    message.textContent = response.text;
+    result.replaceChildren(message);
+    if (response.reasons.length) {
+      const list = document.createElement('ul');
+      for (const reason of response.reasons) {
+        const item = document.createElement('li');
+        item.textContent = reason;
+        list.append(item);
+      }
+      result.append(list);
+    }
+    result.dataset.status = response.status;
     result.classList.toggle('error', response.error);
     result.hidden = false;
+    request.hidden = response.status !== 'eligible';
     result.focus();
   });
 }
