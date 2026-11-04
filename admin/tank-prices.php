@@ -49,7 +49,7 @@ function tank_price_save(array $post): void {
 }
 function tank_price_page(): string {
     $data = tank_price_load();
-    $body = '<nav class="admin-toolbar"><a class="button button-ghost" href="/admin/">درخواست‌ها و پیام‌ها</a><form method="post" action="/admin/">' . csrf_field() . '<input type="hidden" name="action" value="logout"><button class="button button-ghost">خروج امن</button></form></nav><h2>قیمت و موجودی مخزن‌ها</h2><p class="notice">این اطلاعات در فایل خصوصی سرور ذخیره می‌شود، نه مرورگر. اتصال نمایش قیمت به فروشگاه هنوز فعال نیست؛ ذخیره این فرم قیمت عمومی سایت را تغییر نمی‌دهد. پرداخت آنلاین همچنان غیرفعال است.</p>';
+    $body = '<nav class="admin-toolbar"><a class="button button-ghost" href="/admin/">درخواست‌ها و پیام‌ها</a><form method="post" action="/admin/">' . csrf_field() . '<input type="hidden" name="action" value="logout"><button class="button button-ghost">خروج امن</button></form></nav><h2>قیمت و موجودی مخزن‌ها</h2><p class="notice">قیمت و موجودی ذخیره‌شده در فهرست و صفحه مخزن‌ها نمایش داده می‌شود. پس از ذخیره، صفحه فروشگاه را تازه‌سازی کنید. پرداخت آنلاین همچنان غیرفعال است.</p>';
     if (($_GET['saved'] ?? '') === '1') $body .= '<p role="status">قیمت‌ها و وضعیت موجودی در سرور ذخیره شدند.</p>';
     if (isset($data['updatedAt'])) $body .= '<p>آخرین تغییر (UTC): <bdi>' . html($data['updatedAt']) . '</bdi></p>';
     $body .= '<p>قیمت‌ها به تومان هستند. قیمت خالی یعنی «تماس بگیرید». صفر قیمت معتبر نیست. موجودی را مستقل از قیمت تعیین کنید.</p><form method="post" action="/admin/">' . csrf_field() . '<input type="hidden" name="action" value="tank-prices"><input type="hidden" name="revision" value="' . html((string)$data['revision']) . '"><div class="admin-list">';
