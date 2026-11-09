@@ -1,3 +1,4 @@
+import { reconcileSelection, selectionStorageKey } from './shop-selection-import.mjs';
 import { createShopCatalog } from './shop-catalog.mjs';
 import { availableQuantity, setCartQuantity, summarizeCart, freightNotice } from './shop-cart-core.mjs';
 import { mountCheckoutPreview } from './shop-checkout-controller.mjs';
@@ -13,11 +14,23 @@ export function mountCatalogCheckout(root, options = {}) {
   const client = createShopCatalog(options);
   let disposed = false; let state = 'idle'; let child = null; let unbind = () => {};
   let catalog = null; let destinations = null; let items = [];
-  root.innerHTML = '<h2>انتخاب کالا از کاتالوگ حساب</h2><p data-catalog-status role="status">قیمت و موجودی هنگام ثبت دوباره سمت سرور بررسی می‌شوند. پرداخت اینترنتی فعال نیست.</p><p data-catalog-freight></p><button type="button" data-catalog-load>دریافت کاتالوگ و مقصدهای مجاز</button><div data-catalog-products></div><p data-catalog-total></p><button type="button" data-catalog-continue disabled>ادامه با کالاهای انتخاب‌شده</button><div data-catalog-checkout></div>';
+  root.innerHTML = '<h2>انتخاب کالا از کاتالوگ حساب</h2><p data-catalog-status role="status">قیمت و موجودی هنگام ثبت دوباره سمت سرور بررسی می‌شوند. پرداخت اینترنتی فعال نیست.</p><p data-catalog-freight></p><button type="button" data-catalog-load>دریافت کاتالوگ و مقصدهای مجاز</button><label>جست‌وجوی کالا<input type="search" data-catalog-search></label><label>دسته‌بندی<select data-catalog-category><option value="">همه دسته‌بندی‌ها</option></select></label><p data-catalog-count role="status"></p><div data-catalog-products></div><p data-catalog-total></p><button type="button" data-catalog-continue disabled>ادامه با کالاهای انتخاب‌شده</button><div data-catalog-checkout></div>';
   const status = root.querySelector('[data-catalog-status]');
   const loadButton = root.querySelector('[data-catalog-load]');
   const next = root.querySelector('[data-catalog-continue]');
   const products = root.querySelector('[data-catalog-products]');
+  const search = root.querySelector('[data-catalog-search]');
+  const category = root.querySelector('[data-catalog-category]');
+  const normalize = text => text.replace(/ي/g, 'ی').replace(/ك/g, 'ک').trim().toLowerCase();
+  const filter = () => {
+    let count = 0;
+    for (const row of products.children) {
+      row.hidden = !(normalize(row.dataset.title).includes(normalize(search.value)) && (!category.value || row.dataset.category === category.value));
+      if (!row.hidden) count++;
+    }
+    root.querySelector('[data-catalog-count]').textContent = `${new Intl.NumberFormat('fa-IR').format(count)} محصول`;
+  };
+  search.addEventListener('input', filter); category.addEventListener('change', filter);
   const total = root.querySelector('[data-catalog-total]');
   const content = root.querySelector('[data-catalog-checkout]');
   root.querySelector('[data-catalog-freight]').textContent = freightNotice;
@@ -53,10 +66,22 @@ export function mountCatalogCheckout(root, options = {}) {
       if (disposed) return;
       ({ catalog, destinations } = snapshot);
       const document = root.ownerDocument;
+      let imported;
+      try { imported = reconcileSelection(document.defaultView.localStorage.getItem(selectionStorageKey), catalog); }
+      catch { imported = { items: [], invalid: true, changed: 0 }; }
+      items = imported.items;
+      products.replaceChildren();
+      while (category.options.length > 1) category.remove(1);
+      const groups = new Map(Object.values(catalog).filter(p => p.categorySlug).map(p => [p.categorySlug, p.categoryTitle]));
+      for (const [slug, title] of groups) {
+        const option = document.createElement('option'); option.value = slug; option.textContent = title; category.append(option);
+      }
       for (const [slug, product] of Object.entries(catalog)) {
         const row = document.createElement('article');
         row.className = 'store-product';
         row.dataset.productSlug = slug;
+        row.dataset.title = product.title || slug;
+        row.dataset.category = product.categorySlug || '';
         const title = document.createElement('h3');
         title.textContent = product.title || slug;
         const price = document.createElement('p');
@@ -67,7 +92,7 @@ export function mountCatalogCheckout(root, options = {}) {
         row.append(title, price);
         if (available) {
           const input = document.createElement('input');
-          input.type = 'number'; input.min = '0'; input.max = String(available); input.step = '1'; input.value = '0';
+          input.type = 'number'; input.min = '0'; input.max = String(available); input.step = '1'; input.value = String(items.find(item => item.slug === slug)?.quantity ?? 0);
           input.dataset.catalogQuantity = slug; input.autocomplete = 'off';
           input.setAttribute('aria-label', `تعداد ${product.title || slug}`);
           label.append(input);
@@ -75,10 +100,14 @@ export function mountCatalogCheckout(root, options = {}) {
         }
         products.append(row);
       }
+      filter();
       state = 'selecting'; loadButton.hidden = true;
       status.textContent = Object.values(destinations).some(cities => cities.length)
         ? 'کالا و تعداد را انتخاب کنید. ادامه، انتخاب این فهرست را قفل می‌کند؛ فرم بعدی امکان کاهش تعداد دارد.'
         : 'هیچ مقصد مجازی تنظیم نشده است؛ ثبت سفارش بسته می‌ماند.';
+      if (imported.invalid) status.textContent += ' سبد ذخیره‌شده قابل خواندن نیست؛ کالاها را اینجا انتخاب کنید.';
+      else if (imported.items.length || imported.changed) status.textContent += ' انتخاب‌های قبلی با کاتالوگ فعلی تطبیق داده شد؛ پیش از ادامه تعدادها و قیمت‌ها را بررسی کنید.';
+      if (imported.changed) status.textContent += ' برخی اقلام حذف یا تعدادشان به موجودی مجاز کاهش داده شد.';
       update();
     } catch {
       if (!disposed) {
@@ -108,6 +137,7 @@ export function mountCatalogCheckout(root, options = {}) {
       if (disposed) return;
       disposed = true; state = 'disposed'; unbind(); client.dispose(); child?.destroy(); child = null;
       loadButton.removeEventListener('click', load); products.removeEventListener('change', change); next.removeEventListener('click', proceed);
+      search.removeEventListener('input', filter); category.removeEventListener('change', filter);
       catalog = null; destinations = null; items = []; root.replaceChildren(); root.removeAttribute('aria-busy');
     },
   };

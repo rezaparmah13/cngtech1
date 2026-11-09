@@ -13,8 +13,12 @@ export function parseShopCatalog(payload) {
     || Object.keys(payload.catalog).length > 200 || Object.keys(payload.destinations).length > 100) throw new Error('invalid_shop_catalog');
   const catalog = Object.create(null); const destinations = Object.create(null);
   for (const [slug, product] of Object.entries(payload.catalog)) {
+    const categoryKeys = Object.hasOwn(product ?? {}, 'categorySlug') || Object.hasOwn(product ?? {}, 'categoryTitle');
+    if (categoryKeys && !((product.categorySlug === null && product.categoryTitle === null)
+      || (typeof product.categorySlug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(product.categorySlug)
+        && product.categorySlug.length <= 100 && typeof product.categoryTitle === 'string' && product.categoryTitle.length <= 255))) throw new Error('invalid_shop_catalog');
     if (slug.length > 100 || !/^[a-z0-9]+(?:-[a-z0-9]+)*(?![\s\S])/.test(slug)
-      || !exact(product, ['title', 'approvedForSale', 'priceMode', 'priceToman', 'stock', 'reserved', 'revision'])
+      || !exact(product, ['title', 'approvedForSale', 'priceMode', 'priceToman', 'stock', 'reserved', 'revision', ...(categoryKeys ? ['categorySlug', 'categoryTitle'] : [])])
       || typeof product.title !== 'string' || product.title.length > 510
       || typeof product.approvedForSale !== 'boolean' || product.priceMode !== 'real'
       || !(product.priceToman === null || integer(product.priceToman, 100_000_000_000))

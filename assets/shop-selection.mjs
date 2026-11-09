@@ -46,13 +46,20 @@ const grid=$('[data-selection-grid]');
 function filter(){
  if(!grid)return;
  const query=normalize($('[data-selection-search]').value);
+ const category=$('[data-selection-category]')?.value || '';
  const cap=$('[data-selection-capacity]').value;
  const dir=$('[data-selection-sort]').value==='desc'?-1:1;
  const cards=all('[data-selection-product]');let count=0;
  cards.sort((a,b)=>dir*(Number(a.dataset.capacity)-Number(b.dataset.capacity))).forEach(card=>{
-  card.hidden=!(query.split(/\s+/).every(term=>normalize(card.dataset.name).includes(term))&&(!cap||card.dataset.capacity===cap));if(!card.hidden)count++;grid.append(card);
+  card.hidden=!(query.split(/\s+/).every(term=>normalize(card.dataset.name).includes(term))&&(!category||card.dataset.category===category)&&(!cap||card.dataset.capacity===cap));if(!card.hidden)count++;grid.append(card);
  });
  $('[data-selection-results]').textContent=`${fa(count)} محصول`;$('[data-selection-empty]').hidden=count!==0;
 }
-all('[data-selection-search], [data-selection-capacity], [data-selection-sort]').forEach(el=>el.addEventListener(el.type==='search'?'input':'change',filter));
+all('[data-category-pick]').forEach(button=>button.addEventListener('click',()=>{
+ $('[data-selection-category]').value=button.dataset.categoryPick;
+ $('[data-selection-capacity]').value='';
+ $('[data-selection-search]').value='';
+ filter();$('[data-selection-category]').focus();
+}));
+all('[data-selection-category], [data-selection-search], [data-selection-capacity], [data-selection-sort]').forEach(el=>el.addEventListener(el.type==='search'?'input':'change',filter));
 render();filter();
