@@ -1,22 +1,5 @@
 import { parseNumber, calculateSavings, eligibilityMessage } from './logic.js';
 document.documentElement.classList.add('enhanced');
-// Keep the conversion conditions and form clear of the fixed mobile contact bar,
-// even before interaction and while a focused field is scrolled out of view.
-const requestPanel = document.querySelector('#registration-request');
-if (requestPanel && 'IntersectionObserver' in window) {
-  const root = document.documentElement;
-  let inView = false;
-  const updateContactBar = () => root.classList.toggle('request-form-visible',
-    inView || requestPanel.contains(document.activeElement));
-  const observer = new IntersectionObserver(([entry]) => {
-    inView = entry.isIntersecting;
-    updateContactBar();
-    root.classList.add('request-bar-ready');
-  }, { rootMargin: '0px 0px 100px 0px' });
-  observer.observe(requestPanel);
-  requestPanel.addEventListener('focusin', updateContactBar);
-  requestPanel.addEventListener('focusout', () => queueMicrotask(updateContactBar));
-}
 const number = new Intl.NumberFormat('fa-IR', { maximumFractionDigits: 0 });
 const menu = document.querySelector('#nav-menu');
 const toggle = document.querySelector('#menu-toggle');

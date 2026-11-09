@@ -54,17 +54,26 @@ export function mountCatalogCheckout(root, options = {}) {
       ({ catalog, destinations } = snapshot);
       const document = root.ownerDocument;
       for (const [slug, product] of Object.entries(catalog)) {
-        const row = document.createElement('p');
+        const row = document.createElement('article');
+        row.className = 'store-product';
+        row.dataset.productSlug = slug;
+        const title = document.createElement('h3');
+        title.textContent = product.title || slug;
+        const price = document.createElement('p');
         const label = document.createElement('label');
         const available = availableQuantity(product);
-        label.textContent = `${product.title || slug} — ${available ? `${format(product.priceToman)} تومان؛ تعداد` : 'فعلاً قابل خرید نیست'}`;
+        price.textContent = available ? `${format(product.priceToman)} تومان` : 'فعلاً قابل خرید نیست';
+        label.textContent = 'تعداد';
+        row.append(title, price);
         if (available) {
           const input = document.createElement('input');
           input.type = 'number'; input.min = '0'; input.max = String(available); input.step = '1'; input.value = '0';
           input.dataset.catalogQuantity = slug; input.autocomplete = 'off';
+          input.setAttribute('aria-label', `تعداد ${product.title || slug}`);
           label.append(input);
+          row.append(label);
         }
-        row.append(label); products.append(row);
+        products.append(row);
       }
       state = 'selecting'; loadButton.hidden = true;
       status.textContent = Object.values(destinations).some(cities => cities.length)

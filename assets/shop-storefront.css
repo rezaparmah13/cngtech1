@@ -1,0 +1,28 @@
+:root { color-scheme: light; font-family: Tahoma, Arial, sans-serif; color: #172b3a; background: #f3f6fa; line-height: 1.9; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: #075b82; text-underline-offset: .25em; }
+.store-header { background: #123349; color: white; padding: 1rem max(1rem, calc((100% - 70rem)/2)); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.store-header a { color: white; }
+.store-brand { font-size: 1.4rem; font-weight: bold; text-decoration: none; }
+.store-header nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+main { max-width: 70rem; margin: 2rem auto; padding: 0 1rem 3rem; }
+h1 { font-size: clamp(1.4rem, 4vw, 2rem); }
+h2 { font-size: 1.25rem; }
+section, main > form { margin-block: 1.25rem; padding: 1.25rem; border: 1px solid #ccd7df; border-radius: .75rem; background: white; }
+.store-notice { border-inline-start: .3rem solid #087b82; padding: .75rem 1rem; background: #e4f3f2; }
+label { display: block; }
+input, select, textarea, button { font: inherit; max-width: 100%; }
+input:not([type=hidden]):not([type=checkbox]), select, textarea { border: 1px solid #718695; border-radius: .4rem; padding: .45rem .7rem; background: white; color: #172b3a; }
+input[type=checkbox] { width: 1.2rem; height: 1.2rem; }
+button { padding: .55rem 1rem; min-height: 44px; border: 1px solid #075b82; border-radius: .4rem; background: #075b82; color: white; cursor: pointer; margin-block: .4rem; }
+button:disabled { background: #e0e6eb; border-color: #a7b5bf; color: #465965; cursor: not-allowed; }
+:focus-visible { outline: 3px solid #c36a00; outline-offset: 3px; }
+[data-catalog-products] { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: 1rem; }
+.store-product { padding: 1rem; border: 1px solid #ccd7df; border-radius: .6rem; background: #f8fafc; }
+.store-product h3 { margin-block: 0 .5rem; overflow-wrap: anywhere; }
+.store-product input { width: 6rem; margin-inline-start: .5rem; }
+[data-catalog-total] { font-weight: bold; }
+[role=status], dd { overflow-wrap: anywhere; }
+dd { margin-inline-start: 1rem; }
+@media (max-width: 480px) { main { margin-block: 1rem; } section, main > form { padding: .8rem; } input:not([type=hidden]):not([type=checkbox]), select, textarea { width: 100%; } .store-product input { width: 6rem !important; } }

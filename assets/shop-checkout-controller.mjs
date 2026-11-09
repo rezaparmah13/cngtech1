@@ -63,7 +63,11 @@ export function mountCheckoutPreview(root, options = {}) {
     <p role="status" aria-live="polite" data-checkout-status></p>
     <p data-checkout-reference hidden>کد پیگیری ثبت سفارش: <bdi dir="ltr"></bdi></p>
     <button type="button" data-checkout-lookup hidden>دریافت وضعیت فعلی سفارش</button>
-    <p role="status" aria-live="polite" data-checkout-order></p>`;
+    <p role="status" aria-live="polite" data-checkout-order></p>
+    <aside aria-label="راهنمای تماس و پیگیری سفارش">
+      <p>برای هماهنگی سفارش یا پیگیری نتیجهٔ نامشخص، از <a href="/contact/">اطلاعات تماس مجموعه و ساعات پاسخ‌گویی</a> استفاده کنید. اگر کد پیگیری دریافت کرده‌اید، آن را هنگام تماس اعلام کنید.</p>
+      <p>ثبت سفارش به معنی پرداخت، تأیید ارسال یا تضمین موجودی نیست. پیش از هماهنگی با مجموعه وجهی واریز نکنید.</p>
+    </aside>`;
   const cartRoot = root.querySelector('[data-checkout-cart]');
   const recipientRoot = root.querySelector('[data-checkout-recipient]');
   const send = root.querySelector('[data-checkout-send]');

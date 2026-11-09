@@ -4,6 +4,7 @@ import { createShopSession } from './shop-session.mjs';
 import { createRecoveryJournal } from './shop-recovery-journal.mjs';
 import { mountCheckoutStartup } from './shop-checkout-startup.mjs';
 import { mountCatalogCheckout } from './shop-account-checkout.mjs';
+import { mountAccountPayment } from './shop-account-payment.mjs';
 
 const session = createShopSession();
 const root = document.querySelector('[data-shop-account-checkout]');
@@ -23,6 +24,17 @@ if (root) {
     });
   } catch {
     root.textContent = 'آماده‌سازی خرید در این مرورگر ممکن نیست. سفارش جایگزین نسازید؛ با شناسه سفارش از فرم پیگیری حساب استفاده کنید یا با پشتیبانی تماس بگیرید.';
+  }
+}
+const paymentRoot = document.querySelector('[data-shop-account-payment]');
+if (paymentRoot) {
+  try {
+    mountAccountPayment(paymentRoot, {
+      enabled: true, endpoint: location.pathname, origin: location.origin,
+      sessionSignal: session.signal,
+    });
+  } catch {
+    paymentRoot.textContent = 'آماده‌سازی پرداخت ممکن نیست. وضعیت همین سفارش را پیگیری کنید؛ پرداخت را تکرار نکنید.';
   }
 }
 session.signal.addEventListener('abort', () => {
