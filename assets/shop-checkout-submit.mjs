@@ -5,7 +5,8 @@ import { bindSessionSignal, validateSessionSignal } from './shop-session.mjs';
  * Any ambiguous outcome locks the accepted payload: retry exactly, never create a new key.
  * A 2xx response acknowledges order submission only, NOT payment.
  */
-export function createCheckoutSubmission({ endpoint, origin, fetchImpl = globalThis.fetch, keyFactory = () => globalThis.crypto.randomUUID(), recoveryJournal, sessionSignal } = {}) {
+export function createCheckoutSubmission({ endpoint, origin, fetchImpl = globalThis.fetch, keyFactory = () => globalThis.crypto.randomUUID(), recoveryJournal, sessionSignal, requestTimeoutMs = 30000 } = {}) {
+  if (!Number.isSafeInteger(requestTimeoutMs) || requestTimeoutMs < 1 || requestTimeoutMs > 120000) throw new Error('invalid_checkout_timeout');
   validateSessionSignal(sessionSignal);
   // Optional internal integration, not authorization to begin a new checkout.
   // Explicit null/invalid adapters must never silently fall back to memory only.
@@ -17,6 +18,7 @@ export function createCheckoutSubmission({ endpoint, origin, fetchImpl = globalT
   let accepted = null;
   let disposed = false;
   let reference = null;
+  let cancelRequest = null;
   const snapshot = () => ({ state, canRetry: state === 'uncertain', canEdit: state === 'idle', reference });
   let unbind = () => {};
   const client = {
@@ -38,12 +40,30 @@ export function createCheckoutSubmission({ endpoint, origin, fetchImpl = globalT
           if (retained?.state !== 'retained' || retained.canStartNewOrder !== false
             || !Array.isArray(retained.keys) || !retained.keys.includes(key)) throw new Error('recovery_journal_unavailable');
         }
-        const response = await fetchImpl(url.href, {
+        const controller = new AbortController();
+        let timer;
+        let rejectWait;
+        const interrupted = new Promise((_, reject) => { rejectWait = reject; });
+        const cancel = () => {
+          rejectWait(new Error('checkout_request_interrupted'));
+          controller.abort();
+        };
+        cancelRequest = cancel;
+        timer = setTimeout(cancel, requestTimeoutMs);
+        let response;
+        try {
+          // Aborting the browser wait never proves rollback on the server.
+          // Race also bounds transports that fail to honor AbortSignal.
+          response = await Promise.race([fetchImpl(url.href, {
           method: 'POST', credentials: 'same-origin', mode: 'same-origin',
           redirect: 'error', cache: 'no-store', referrerPolicy: 'same-origin',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-          body,
-        });
+          body, signal: controller.signal,
+          }), interrupted]);
+        } finally {
+          clearTimeout(timer);
+          if (cancelRequest === cancel) cancelRequest = null;
+        }
         if (disposed) return { state: 'disposed' };
         // Even a later 400 (expired session/CSRF) cannot disprove an earlier commit.
         // Require an explicit acknowledgement, not merely a login page with HTTP 200.
@@ -63,7 +83,8 @@ export function createCheckoutSubmission({ endpoint, origin, fetchImpl = globalT
     dispose() {
       // Disposal does not cancel or undo server-side work. Caller must not automatically
       // start a replacement checkout after navigating away from an uncertain outcome.
-      disposed = true; accepted = null; reference = null; state = 'disposed'; unbind();
+      disposed = true; accepted = null; reference = null; state = 'disposed';
+      cancelRequest?.(); cancelRequest = null; unbind();
     },
   };
   unbind = bindSessionSignal(sessionSignal, client.dispose);

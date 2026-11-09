@@ -26,26 +26,36 @@ export function orderSnapshotText(order) {
   return `وضعیت ثبت‌شده در سرور: ${labels[order.status] ?? 'نیازمند پیگیری از پشتیبانی'}. مبلغ کالاها: ${money(order.goodsTotalToman)}. کرایه: ${order.shippingMode === 'collect_on_delivery' ? 'پس‌کرایه؛ جدا از کالاها و قابل پرداخت هنگام تحویل' : money(order.shippingToman)}. مبلغ ثبت‌شده سفارش: ${money(order.payableToman)}. این اطلاعات فقط وضعیت لحظه دریافت است؛ اعتبار رزرو یا موفقیت پرداخت را تضمین نمی‌کند. پرداخت آنلاین در این پیش‌نمایش فعال نیست.`;
 }
 
-export function createOrderLookup({ endpoint, origin, csrf, fetchImpl = globalThis.fetch } = {}) {
+export function createOrderLookup({ endpoint, origin, csrf, fetchImpl = globalThis.fetch, timeoutMs = 30000 } = {}) {
   const base = new URL(origin); const url = new URL(endpoint, base);
   if (base.protocol !== 'https:' || url.protocol !== 'https:' || base.origin !== url.origin || url.username || url.password || url.search || url.hash || typeof endpoint !== 'string' || !endpoint || typeof csrf !== 'string' || !csrf || typeof fetchImpl !== 'function') throw new Error('invalid_lookup_config');
-  let pending = false; let disposed = false;
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120000) throw new Error('invalid_lookup_config');
+  let pending = false; let disposed = false; let cancel = null;
   return {
     async lookup(reference) {
       if (disposed || pending) throw new Error('lookup_unavailable');
       if (typeof reference !== 'string' || !/^[a-f0-9]{32}$/.test(reference)) throw new Error('invalid_order_reference');
       pending = true;
+      const controller = new AbortController();
+      let timer;
+      const cancelled = new Promise((_, reject) => {
+        cancel = () => { reject(new Error('lookup_unavailable')); controller.abort(); };
+        timer = setTimeout(cancel, timeoutMs);
+      });
       try {
-        const response = await fetchImpl(url.href, { method: 'POST', mode: 'same-origin', credentials: 'same-origin', redirect: 'error', cache: 'no-store', referrerPolicy: 'same-origin',
+        const operation = async () => {
+        const response = await fetchImpl(url.href, { signal: controller.signal, method: 'POST', mode: 'same-origin', credentials: 'same-origin', redirect: 'error', cache: 'no-store', referrerPolicy: 'same-origin',
           headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
           body: new URLSearchParams({ action: 'lookup', csrf, reference }).toString() });
         if (disposed || response.status !== 200 || response.redirected || !/^application\/json(?:\s*;|$)/i.test(response.headers?.get('Content-Type') ?? '')) throw new Error('lookup_unavailable');
         const payload = await response.json();
         if (disposed) throw new Error('lookup_unavailable');
         return parseOrderSnapshot(payload, reference);
+        };
+        return await Promise.race([operation(), cancelled]);
       } catch { throw new Error('lookup_unavailable'); }
-      finally { pending = false; }
+      finally { clearTimeout(timer); cancel = null; pending = false; }
     },
-    dispose() { disposed = true; },
+    dispose() { disposed = true; cancel?.(); },
   };
 }
